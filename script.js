@@ -240,4 +240,162 @@ searchInput.addEventListener('keypress', function(e) {
     }
 });
 
+// =======================================================
+// LÓGICA DE LOGIN E CADASTRO
+// =======================================================
+
+// Funções para Modais
+const modalLogin = document.getElementById('modal-login');
+const modalCadastro = document.getElementById('modal-cadastro');
+
+function abrirModal(modal) {
+    if (modal) {
+        modal.style.display = 'flex';
+    }
+}
+
+function fecharModal(modal) {
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// Eventos para abrir e fechar os modais
+document.getElementById('abrir-login-popup')?.addEventListener('click', () => abrirModal(modalLogin));
+document.getElementById('abrir-cadastro')?.addEventListener('click', () => { fecharModal(modalLogin); abrirModal(modalCadastro); });
+document.getElementById('abrir-login')?.addEventListener('click', () => { fecharModal(modalCadastro); abrirModal(modalLogin); });
+
+document.querySelectorAll('.fechar').forEach(btn => {
+    btn.addEventListener('click', (e) => fecharModal(e.target.closest('.modal-container')));
+});
+
+// Fecha ao clicar fora
+window.addEventListener('click', (event) => {
+    if (event.target === modalLogin) { fecharModal(modalLogin); }
+    if (event.target === modalCadastro) { fecharModal(modalCadastro); }
+});
+
+// Função para mostrar/esconder senha
+function togglePassword(id) {
+    const input = document.getElementById(id);
+    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+    input.setAttribute('type', type);
+}
+
+// Lógica de Cadastro
+document.getElementById('form-cadastro')?.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const nomeCompleto = document.getElementById('nome-cadastro').value;
+    const rmEscolar = document.getElementById('rm-cadastro').value;
+    const senha = document.getElementById('senha-cadastro').value;
+    const confirmarSenha = document.getElementById('confirmar-senha').value;
+
+    if (senha !== confirmarSenha) {
+        alert('As senhas não coincidem!');
+        return;
+    }
+
+    let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+    const rmExistente = usuarios.find(user => user.rm === rmEscolar);
+
+    if (rmExistente) {
+        alert('RM já cadastrado!');
+        return;
+    }
+
+    usuarios.push({
+        rm: rmEscolar,
+        nome: nomeCompleto,
+        senha: senha
+    });
+
+    localStorage.setItem('usuarios', JSON.stringify(usuarios));
+
+    alert('Cadastro realizado com sucesso! Faça login agora.');
+    fecharModal(modalCadastro);
+    abrirModal(modalLogin);
+});
+
+// Lógica de Login
+document.getElementById('form-login')?.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const rm = document.getElementById('rm-login').value;
+    const senha = document.getElementById('senha-login').value;
+
+    const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+    const usuarioEncontrado = usuarios.find(user => user.rm === rm && user.senha === senha);
+
+    if (usuarioEncontrado) {
+        localStorage.setItem('usuarioLogado', JSON.stringify({
+            logado: true,
+            rm: usuarioEncontrado.rm,
+            nome: usuarioEncontrado.nome
+        }));
+
+        alert('Login realizado com sucesso!');
+        fecharModal(modalLogin);
+        window.location.reload(); 
+    } else {
+        alert('RM ou senha incorretos!');
+    }
+});
+
+// Lógica de Verificação de Login e Logout
+function verificarEstadoDeLogin() {
+    const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+    const perfilIcon = document.getElementById('abrir-menu-perfil');
+    const menuPerfil = document.getElementById('menu-perfil');
+    const btnLoginPopup = document.getElementById('abrir-login-popup');
+    
+    if (usuarioLogado && usuarioLogado.logado) {
+        if (perfilIcon) perfilIcon.style.display = 'block';
+        if (btnLoginPopup) btnLoginPopup.style.display = 'none';
+        
+        if (document.getElementById('nome-usuario')) {
+            document.getElementById('nome-usuario').textContent = `Olá, ${usuarioLogado.nome}`;
+        }
+        if (document.getElementById('rm-logado-display')) {
+            document.getElementById('rm-logado-display').textContent = usuarioLogado.rm;
+        }
+        
+    } else {
+        if (perfilIcon) perfilIcon.style.display = 'none';
+        if (menuPerfil) menuPerfil.style.display = 'none';
+        if (btnLoginPopup) btnLoginPopup.style.display = 'block';
+    }
+}
+
+// Evento de clique para mostrar/esconder o menu de perfil
+document.getElementById('abrir-menu-perfil')?.addEventListener('click', function(event) {
+    event.preventDefault();
+    const menuPerfil = document.getElementById('menu-perfil');
+    if (menuPerfil) {
+        if (menuPerfil.style.display === 'block') {
+            menuPerfil.style.display = 'none';
+        } else {
+            menuPerfil.style.display = 'block';
+        }
+    }
+});
+
+// Evento de clique no botão de logout
+document.getElementById('btn-logout')?.addEventListener('click', function() {
+    localStorage.removeItem('usuarioLogado');
+    alert('Você foi desconectado.');
+    window.location.reload();
+});
+
+// Chama a função ao carregar a página
+window.addEventListener('load', verificarEstadoDeLogin);
+
+  (function(d){
+    var s = d.createElement("script");
+    s.setAttribute("data-account", "INSIRA_SEU_CÓDIGO_USERWAY_AQUI"); //exemplo para aplicações maiores
+    s.setAttribute("src", "https://cdn.userway.org/widget.js");
+    (d.body || d.head).appendChild(s);
+    })(document);
+
+
 
