@@ -26,8 +26,21 @@
                 
                 <div id="results"></div>
             </div>
-            <div class="icon"><i class="fas fa-bell"></i></div> 
-            <div class="icon profile-icon"><i class="fas fa-user"></i></div>
+            <div class="profile-area">
+    <a href="#" class="perfil-icon" id="abrir-menu-perfil" style="display: none;">
+        <img src="usuario.png" alt="Perfil">
+    </a>
+    <div id="menu-perfil" class="menu-perfil" style="display: none;">
+        <span id="nome-usuario">Olá, nome</span>
+        <div class="rm-logado">RM: <span id="rm-logado-display"></span></div>
+        <hr>
+        <a href="reserva.html">Meus empréstimos</a>
+        <a href="#" id="btn-logout">Sair</a>
+    </div>
+    <a href="#" id="abrir-login-popup" class="btn-entrar">
+        Login
+    </a>
+</div>
         </div>
     </header>
 
@@ -293,6 +306,61 @@
         </div>
     </section>
 
+<div id="modal-login" class="modal-container">
+    <div class="modal">
+        <button class="fechar">x</button>
+        <div class="header-modal">
+            <img src="/Log in.png" alt="img login" id="img-login">
+        </div>
+        <form id="form-login">
+            <label for="rm-login">RM Escolar:</label>
+            <input type="text" id="rm-login" placeholder="Digite seu RM Escolar" required>
+
+            <label for="senha-login">Senha:</label>
+            <div class="senha-input">
+                <input type="password" id="senha-login" placeholder="Digite sua senha" required>
+                <span class="eye-icon" onclick="togglePassword('senha-login')">👁️</span>
+            </div>
+
+            <a href="#" id="esqueci-senha">esqueci minha senha</a>
+
+            <button type="submit" class="btn-login">ENTRAR</button>
+        </form>
+        <p>Não possui uma conta? <a href="#" id="abrir-cadastro">Clique aqui</a></p>
+    </div>
+</div>
+
+<div id="modal-cadastro" class="modal-container">
+    <div class="modal">
+        <button class="fechar">x</button>
+        <div class="header-modal">
+            <img src="/cadastro.png" alt="img cadastro" id="img-cadastro">
+        </div>
+        <form id="form-cadastro">
+            <label for="nome-cadastro">Nome Completo:</label>
+            <input type="text" id="nome-cadastro" placeholder="Digite seu nome completo" required>
+
+            <label for="rm-cadastro">RM Escolar:</label>
+            <input type="text" id="rm-cadastro" placeholder="Digite seu RM escolar" required>
+
+            <label for="senha-cadastro">Senha:</label>
+            <div class="senha-input">
+                <input type="password" id="senha-cadastro" placeholder="Crie uma senha" required>
+                <span class="eye-icon" onclick="togglePassword('senha-cadastro')">👁️</span>
+            </div>
+
+            <label for="confirmar-senha">Confirmar Senha:</label>
+            <div class="senha-input">
+                <input type="password" id="confirmar-senha" placeholder="Confirme sua senha" required>
+                <span class="eye-icon" onclick="togglePassword('confirmar-senha')">👁️</span>
+            </div>
+
+            <button type="submit" class="btn-cadastro">CADASTRAR</button>
+        </form>
+        <p>Possui uma conta? <a href="#" id="abrir-login">Entrar</a></p>
+    </div>
+</div>
+    
     <script>
         const searchInput = document.getElementById('search-input');
 const searchButton = document.getElementById('search-button');
